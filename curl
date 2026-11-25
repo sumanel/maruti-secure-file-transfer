@@ -1,1 +1,2 @@
 curl --location 'https://archive.lqs.co.in/v1/chat360/leads/search' --header 'Authorization: Bearer <YOUR_TOKEN>' --header 'Content-Type: application/json' --data '{"submitted_from":"2026-10-01T00:00:00+05:30","submitted_to":"2026-10-21T00:00:00+05:30","business_type":"3S","dealer_code":"15NC","dealer_for_code":"15","page_size":100}'
+

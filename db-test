@@ -1,0 +1,1 @@
+nc -zv aws-mu-rds-cdp-uat-stg-postgres.ct844wk8c9nf.ap-south-1.rds.amazonaws.com 5432
