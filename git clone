@@ -1,0 +1,1 @@
+sudo git clone --branch stage-v3.0.0 https://github.com/sumanel/whatsapp-group-automation.git whatsapp-group-automation
