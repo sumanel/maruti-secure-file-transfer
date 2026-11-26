@@ -1,1 +1,16 @@
 nc -zv aws-mu-rds-cdp-uat-stg-postgres.ct844wk8c9nf.ap-south-1.rds.amazonaws.com 5432
+
+
+#connect database
+psql -h aws-mu-rds-cdp-uat-stg-postgres.ct844wk8c9nf.ap-south-1.rds.amazonaws.com -p 5432 -U postgres -d postgres
+
+#using ssl 
+psql "host=aws-mu-rds-cdp-uat-stg-postgres.ct844wk8c9nf.ap-south-1.rds.amazonaws.com port=5432 dbname=postgres user=postgres sslmode=require"
+
+#username - postgres
+#password - C.gMGYCE_#~AtO$zDHkd5$BaV<:R
+
+{
+  "u": "postgres",
+  "p": "C.gMGYCE_#~AtO$zDHkd5$BaV<:R"
+}
