@@ -1,0 +1,14 @@
+[Unit]
+Description=Process Monitoring and Control Daemon
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/supervisord -c /etc/supervisor/supervisord.conf
+ExecStop=/usr/local/bin/supervisorctl -c /etc/supervisor/supervisord.conf shutdown
+ExecReload=/usr/local/bin/supervisorctl -c /etc/supervisor/supervisord.conf reload
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
