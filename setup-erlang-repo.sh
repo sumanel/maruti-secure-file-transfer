@@ -1,24 +1,29 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 
-# RabbitMQ Erlang repository setup for Amazon Linux 2023 (x86_64).
+# Configure the official RabbitMQ Erlang RPM repository on Amazon Linux 2023 x86_64.
 # Run: sudo bash setup-erlang-repo.sh
 
+if [[ "${EUID}" -ne 0 ]]; then
+  echo "ERROR: Run this script with sudo: sudo bash setup-erlang-repo.sh" >&2
+  exit 1
+fi
+
 if [[ "$(uname -m)" != "x86_64" ]]; then
-  echo "ERROR: This script expects x86_64. Detected: $(uname -m)" >&2
+  echo "ERROR: This repository supports x86_64 only. Detected: $(uname -m)" >&2
   exit 1
 fi
 
 KEY_URL="https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-erlang.E495BB49CC4BBE5B.key"
 REPO_FILE="/etc/yum.repos.d/rabbitmq-erlang.repo"
 
-echo "[1/3] Importing RabbitMQ Erlang signing key..."
+echo "[1/4] Importing RabbitMQ Erlang signing key..."
 rpm --import "$KEY_URL"
 
-echo "[2/3] Configuring RabbitMQ Erlang repository..."
+echo "[2/4] Writing Amazon Linux 2023 Erlang repository configuration..."
 cat > "$REPO_FILE" <<'EOF'
 [modern-erlang]
-name=RabbitMQ Erlang Repository
+name=RabbitMQ Erlang Repository for Amazon Linux 2023
 baseurl=https://yum1.rabbitmq.com/erlang/el/9/$basearch
         https://yum2.rabbitmq.com/erlang/el/9/$basearch
 repo_gpgcheck=1
@@ -32,7 +37,7 @@ pkg_gpgcheck=1
 type=rpm-md
 
 [modern-erlang-noarch]
-name=RabbitMQ Erlang Noarch Repository
+name=RabbitMQ Erlang Noarch Repository for Amazon Linux 2023
 baseurl=https://yum1.rabbitmq.com/erlang/el/9/noarch
         https://yum2.rabbitmq.com/erlang/el/9/noarch
 repo_gpgcheck=1
@@ -46,9 +51,13 @@ pkg_gpgcheck=1
 type=rpm-md
 EOF
 
-echo "[3/3] Refreshing DNF metadata..."
-dnf makecache
+echo "[3/4] Displaying configured repository URLs..."
+grep -E '^\[|^baseurl=' "$REPO_FILE"
+
+echo "[4/4] Refreshing repository metadata..."
+dnf clean metadata
+dnf makecache --refresh --disablerepo='*' --enablerepo=modern-erlang,modern-erlang-noarch
 
 echo
-echo "Erlang repository configured successfully."
-echo "Next: install a RabbitMQ-supported Erlang version."
+echo "SUCCESS: RabbitMQ Erlang repository metadata downloaded."
+echo "Next step: install Erlang after confirming this script completes successfully."
